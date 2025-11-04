@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <!-- Jordan Nguyen 10/28/2025 CS-361 -->
+      <title>Help</title>
+      <link href="{{ url_for('static', filename='styles/style.css') }}" rel="stylesheet">
+   </head>
+   <body>
+      <header>
+         <ul>
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('add_omdb') }}">Add OMDb</a></li>
+            <li><a href="{{ url_for('add_manual') }}">Add Manual</a></li>
+            <li><a href="{{ url_for('help_page') }}"class="active">Help</a></li>
+         </ul>
+      </header>
+
+      <h1>Help</h1>
+
+      <p>This app lets users track their various forms of media in one collection.</p>
+      <ul>
+         <li>To find the specific media, select Search on the navigation bar.</li>
+         <li>If your specific media isn’t available when search, you can add it manually. The option to add manually is present in the search page.</li>
+         <li>To remove a media, select the media in either the home page or via search. Click on the check mark on the top left of the media’s cover to remove.</li>
+      </ul>
+
+      <p>Contact us at [...]</p>
+      
+      <a href="/">Back to Home</a>
+   </body>
+</html>

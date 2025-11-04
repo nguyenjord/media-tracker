@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <!-- Jordan Nguyen 11/3/2025 CS-361 -->
+      <title>My Collection</title>
+      <link href="{{ url_for('static', filename='styles/style.css') }}" rel="stylesheet">
+   </head>
+   <body>
+      <header>
+         <ul>
+            <li><a href="{{ url_for('home') }}" class="active">Home</a></li>
+            <li><a href="{{ url_for('add_omdb') }}">Add OMDb</a></li>
+            <li><a href="{{ url_for('add_manual') }}">Add Manual</a></li>
+            <li><a href="{{ url_for('help_page') }}">Help</a></li>
+         </ul>
+      </header>
+
+      <h1>My Collection</h1>
+
+      <!-- items -->
+      <div class="layout"> <!-- future ref: flask uses jinja (D:) for templates https://flask.palletsprojects.com/en/stable/templating/-->
+        {% if items %} <!-- if item list isnt empty -->
+         {% for item in items %} <!-- loops through each movie in list -->
+
+         <div class="item">
+            <img src="{{ item.poster or url_for('static', filename='default.jpg') }}" alt="{{ item.title }}">
+
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.year }}</p>
+            <p>{{ item.type | capitalize }}</p>
+            {% if item.runtime %}
+            
+            <!-- remove button -->
+            <form action="{{ url_for('remove_movie', item_id=item.id) }}" method="POST" class="remove-form" onsubmit="return confirm('Are you sure you want to remove this movie?');">
+              <button type="submit">Remove</button>
+            </form>
+            
+            <!-- update progress func -->
+            <form action="{{ url_for('update_progress', item_id=item.id) }}" method="POST" class="progress-form">
+               <input 
+                  type="number" 
+                  id="progress-{{ item.id }}" 
+                  name="progress" 
+                  min="0" 
+                  max="{{ item.runtime }}" 
+                  value="{{ item.progress }}" 
+                  required>
+               / {{ item.runtime }} min 
+            </form>
+
+            {% endif %}
+         </div>
+         {% endfor %}
+
+         {% else %}
+         <p>No items found.</p>
+         {% endif %}
+         
+      </div>
+   </body>
+</html>

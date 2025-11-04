@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <!-- Jordan Nguyen 11/2/2025 CS-361 -->
+      <title>Add Media</title>
+      <link href="{{ url_for('static', filename='styles/style.css') }}" rel="stylesheet">
+   </head>
+   <body>
+      <header>
+         <ul>
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('add_omdb') }}" class="active">Add OMDb</a></li>
+            <li><a href="{{ url_for('add_manual') }}">Add Manual</a></li>
+            <li><a href="{{ url_for('help_page') }}">Help</a></li>
+         </ul>
+      </header>
+
+      <h1>Add Media</h1>
+      
+      <!-- search func -->
+      <form method="POST">
+         <input type="text" name="title" placeholder="Enter movie title..." required>
+         <button type="submit">Search</button>
+      </form>
+      
+      <!-- error -->
+      {% if error %}
+      <p class="error">{{ error }}</p>
+      {% endif %}
+
+      <!-- success -->
+      {% if movie %}
+      <div class="add">
+         <img src="{{ movie.Poster }}" alt="{{ movie.Title }}">
+         <div class="info">
+
+            <h2>Title: {{ movie.Title }}</h2>
+            <p>By: {{ movie.Director }}</p>
+            <p>Media Type: {{ movie.Type | capitalize }}</p>
+            <p>Runtime: {{ movie.Runtime }}</p>
+            <p>{{ movie.Plot }}</p>
+
+            <!-- add to collection -->
+            <form method="POST" action="{{ url_for('add_omdb') }}">
+               <input type="hidden" name="title" value="{{ movie.Title }}">
+               <button type="submit" name="action" value="add">Add to Collection</button>
+            </form>
+         </div>
+      </div>
+      {% endif %}
+   </body>
+</html>
