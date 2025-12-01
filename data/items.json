@@ -1,1 +1,22 @@
-[]
+[
+  {
+    "id": 1,
+    "title": "The Batman",
+    "type": "movie",
+    "year": "2022",
+    "poster": "https://m.media-amazon.com/images/M/MV5BMmU5NGJlMzAtMGNmOC00YjJjLTgyMzUtNjAyYmE4Njg5YWMyXkEyXkFqcGc@._V1_SX300.jpg",
+    "status": "Want to Watch",
+    "runtime": 176,
+    "progress": 0
+  },
+  {
+    "id": 2,
+    "title": "ujh",
+    "type": "",
+    "year": "",
+    "poster": null,
+    "status": "Want to Watch",
+    "runtime": 0,
+    "progress": 0
+  }
+]
