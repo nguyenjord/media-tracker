@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+   <head>
+        <!-- Jordan Nguyen 11/30/2025 CS-361 -->
+        <title>Register</title>
+        <link href="{{ url_for('static', filename='styles/style.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='styles/userauth.css') }}" rel="stylesheet">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+   </head>
+   <body>
+        <h1>Register</h1>
+
+        {% if error %}
+            <p style="color:red">{{ error }}</p>
+        {% endif %}
+
+        <form method = "POST">
+
+            <input type = "text" name = "username" placeholder="Enter username" required></label><br>
+            
+            <input type = "password" name = "password" placeholder="Enter password" required></label><br>
+
+            <input type = "password" name = "confirm" placeholder="Confirm password" required></label><br>
+
+            <button type = "submit">Register</button>
+        </form>
+   </body>
+</html>

@@ -4,37 +4,66 @@
       <!-- Jordan Nguyen 11/3/2025 CS-361 -->
       <title>My Collection</title>
       <link href="{{ url_for('static', filename='styles/style.css') }}" rel="stylesheet">
+      <link href="{{ url_for('static', filename='styles/home.css') }}" rel="stylesheet">
+      
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
    </head>
    <body>
       <header>
          <ul>
             <li><a href="{{ url_for('home') }}" class="active">Home</a></li>
             <li><a href="{{ url_for('add_omdb') }}">Add OMDb</a></li>
-            <li><a href="{{ url_for('add_manual') }}">Add Manual</a></li>
+            <li><a href="{{ url_for('add_manual') }}">Manual Add</a></li>
             <li><a href="{{ url_for('help_page') }}">Help</a></li>
+            
+            {% if session.get('username') %}
+               <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            {% endif %}
          </ul>
       </header>
 
+      {% with messages = get_flashed_messages(with_categories=true) %}
+         {% if messages %}
+               <ul class ="flashes">
+                  {% for category, message in messages %}
+                     <li class = "{{ category }}">{{ message }}</li>
+                  {% endfor %}
+               </ul>
+         {% endif %}
+      {% endwith %}
+
+      {% if total_count is defined %}
+         <p>Total items in collection: {{ total_count }}</p>
+      {% endif %}
+
       <h1>My Collection</h1>
 
+      
+
       <!-- items -->
-      <div class="layout"> <!-- future ref: flask uses jinja (D:) for templates https://flask.palletsprojects.com/en/stable/templating/-->
+      <div class="layout">
         {% if items %} <!-- if item list isnt empty -->
          {% for item in items %} <!-- loops through each movie in list -->
 
          <div class="item">
+            <form action="{{url_for('remove_movie', item_id = item.id) }}"
+                  method = "POST"
+                  class = "remove-overlay"
+                  onclick = "return confirm('Are you sure you want to remove this item?');">
+
+               <input type = "checkbox" class = "remove-checkbox" onclick = "this.form.submit()">
+            </form>
+
             <img src="{{ item.poster or url_for('static', filename='default.jpg') }}" alt="{{ item.title }}">
 
             <h3>{{ item.title }}</h3>
             <p>{{ item.year }}</p>
             <p>{{ item.type | capitalize }}</p>
+            <p>Date Added: {{ item.date_added }}</p>
+
             {% if item.runtime %}
-            
-            <!-- remove button -->
-            <form action="{{ url_for('remove_movie', item_id=item.id) }}" method="POST" class="remove-form" onsubmit="return confirm('Are you sure you want to remove this movie?');">
-              <button type="submit">Remove</button>
-            </form>
-            
             <!-- update progress func -->
             <form action="{{ url_for('update_progress', item_id=item.id) }}" method="POST" class="progress-form">
                <input 
@@ -53,9 +82,10 @@
          {% endfor %}
 
          {% else %}
-         <p>No items found.</p>
+         <h2>No items found.</h2>
          {% endif %}
-         
+
+         </div>
       </div>
    </body>
 </html>

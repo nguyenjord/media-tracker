@@ -4,31 +4,48 @@
       <!-- Jordan Nguyen 11/3/2025 CS-361 -->
       <title>Manual Add</title>
       <link href="{{ url_for('static', filename='styles/style.css') }}" rel="stylesheet">
+      <link href="{{ url_for('static', filename='styles/add.css') }}" rel="stylesheet">
+      
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
    </head>
    <body>
       <header>
          <ul>
             <li><a href="{{ url_for('home') }}">Home</a></li>
             <li><a href="{{ url_for('add_omdb') }}">Add OMDb</a></li>
-            <li><a href="{{ url_for('add_manual') }}" class="active">Add Manual</a></li>
+            <li><a href="{{ url_for('add_manual') }}" class="active">Manual Add</a></li>
             <li><a href="{{ url_for('help_page') }}">Help</a></li>
+
+            {% if session.get('username') %}
+               <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            {% endif %}
          </ul>
       </header>
+      <div class="add_manual">
+         <div class="info_manual">
+            <h1>Manual Add</h1>
 
-      <h1>Add a Movie Manually</h1>
+            {% if error %}
+            <p class="error">{{ error }}</p>
+            {% endif %}
+            
+            <form method="POST">
+               <input type="text" name="title" placeholder="Enter title"required></label><br>
 
-      {% if error %}
-      <p class="error">{{ error }}</p>
-      {% endif %}
+               <input type="text" name="type" placeholder="Enter media type"></label><br>
 
-      <form method="POST">
-         <label>Title: <input type="text" name="title" required></label><br>
-         <label>Type: <input type="text" name="type" placeholder="Movie / Series"></label><br>
-         <label>Year: <input type="text" name="year" placeholder="e.g. 2025"></label><br>
-         <label>Runtime (minutes): <input type="number" name="runtime" min="0"></label><br>
-         <label>Poster URL: <input type="text" name="poster" placeholder="Optional image URL"></label><br>
-         <button type="submit">Add Movie</button>
-      </form>
-      
+               <input type="text" name="year" placeholder="Enter year"></label><br>
+
+               <input type="number" name="runtime" min="0" placeholder="Enter runtime"></label><br>
+
+               <input type="text" name="poster" placeholder="Enter image URL"></label><br>
+
+               <button type="submit">Add Movie</button>
+            </form>
+
+         </div>
+      </div>
    </body>
 </html>

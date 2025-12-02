@@ -1,0 +1,69 @@
+body {
+    margin:50px;
+    display: grid;
+    place-items:center;
+    
+}
+
+
+a {
+    margin-top: 50px;
+}
+
+input[type="text"],input[type="password"] {
+    padding: 10px 20px;
+    font-size: 125%;
+    margin: 20px 0;
+}
+
+button {  
+    margin-top: 20px;
+    background-color: #3a5275;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    width:100%;
+    font-size: 125%;
+    
+}
+
+.register-button {
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 20px;
+    background-color: #3a5275;
+    color: white;
+    padding: 10px 0 ;
+    border: none;
+    cursor: pointer;
+    width:100%;
+    font-size: 125%;
+}
+
+.flashes {
+    list-style: none;
+    padding: 0;
+    margin:10px 0;
+}
+
+.flashes li {
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    color: black;
+    font-weight: bold;
+}
+
+
+.flashes li.success {
+    background-color: rgb(168, 230, 172);
+    border: 2px solid rgb(96, 230, 105);
+}
+
+
+.flashes li.error {
+    background-color: rgb(229, 183, 183);
+    border: 2px solid rgb(230, 96, 96);
+}

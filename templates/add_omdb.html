@@ -4,25 +4,38 @@
       <!-- Jordan Nguyen 11/2/2025 CS-361 -->
       <title>Add Media</title>
       <link href="{{ url_for('static', filename='styles/style.css') }}" rel="stylesheet">
+      <link href="{{ url_for('static', filename='styles/add.css') }}" rel="stylesheet">
+
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
    </head>
    <body>
       <header>
          <ul>
             <li><a href="{{ url_for('home') }}">Home</a></li>
             <li><a href="{{ url_for('add_omdb') }}" class="active">Add OMDb</a></li>
-            <li><a href="{{ url_for('add_manual') }}">Add Manual</a></li>
+            <li><a href="{{ url_for('add_manual') }}">Manual Add</a></li>
             <li><a href="{{ url_for('help_page') }}">Help</a></li>
+
+            {% if session.get('username') %}
+               <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            {% endif %}
          </ul>
       </header>
 
       <h1>Add Media</h1>
       
       <!-- search func -->
-      <form method="POST">
-         <input type="text" name="title" placeholder="Enter movie title..." required>
-         <button type="submit">Search</button>
-      </form>
-      
+      <div class="search">
+         {% if not movie %}
+         <form method="POST">
+            <input type="text" name="title" placeholder="Enter title..." required>
+            <button type="submit">Search</button>
+         </form>
+         {% endif %}
+      </div>
+
       <!-- error -->
       {% if error %}
       <p class="error">{{ error }}</p>
@@ -32,8 +45,8 @@
       {% if movie %}
       <div class="add">
          <img src="{{ movie.Poster }}" alt="{{ movie.Title }}">
-         <div class="info">
 
+         <div class="info">
             <h2>Title: {{ movie.Title }}</h2>
             <p>By: {{ movie.Director }}</p>
             <p>Media Type: {{ movie.Type | capitalize }}</p>
@@ -48,5 +61,6 @@
          </div>
       </div>
       {% endif %}
+
    </body>
 </html>

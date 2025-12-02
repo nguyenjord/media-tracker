@@ -1,14 +1,37 @@
 # Author: Jordan Nguyen
-# Date: 10/28/2025
+# Date: 10/28/2025 - 12/1/2025
 
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, session
 from secret import OMDB_API_KEY
-import json, os, requests
+import json, os, requests, zmq
 
 app = Flask(__name__)
 DATA_FILE = "data/items.json"
+app.secret_key = os.urandom(24) # flask secure session
 
-# helpers (future ref: used https://www.geeksforgeeks.org/python/reading-and-writing-json-to-a-file-in-python/ and stackoverflow)
+## zeromq
+# user authentication (small pool)
+auth_context = zmq.Context()
+auth_socket = auth_context.socket(zmq.REQ)
+auth_socket.connect("tcp://localhost:5555") 
+
+# calender (big pool)
+calender_context = zmq.Context()
+calender_socket = calender_context.socket(zmq.REQ)
+calender_socket.connect("tcp://localhost:5551") 
+
+# time (big pool)
+clock_context = zmq.Context()
+clock_socket = clock_context.socket(zmq.REQ)
+clock_socket.connect("tcp://localhost:5556") 
+
+# counter (big pool)
+counter_context = zmq.Context()
+counter_socket = counter_context.socket(zmq.REQ)
+counter_socket.connect("tcp://localhost:5558")
+
+
+## helper funcs
 def load_items(): # loads items from json file (items.json)
     if not os.path.exists(DATA_FILE):
         return []
@@ -19,9 +42,114 @@ def save_items(items): # saves items to json file (items.json)
     with open(DATA_FILE, "w") as f:
         json.dump(items, f, indent=2)
 
-# flask routes
+## microservice funcs
+@app.route("/login", methods=["GET", "POST"]) 
+def login():
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "").strip()
 
-# help page (future ref: flask uses routes instead of mapping to different pages via html)
+        request_data = {
+            "action": "login",
+            "username": username,
+            "password": password
+        }
+
+        auth_socket.send_string(json.dumps(request_data))
+
+        reply_json = auth_socket.recv_string()
+        reply = json.loads(reply_json)
+
+        if reply.get("status") == "ok":
+            session["username"] = username
+            session["session_id"] = reply.get("session_id")
+
+            current_time = get_current_time()
+            flash(f"Welcome, {username}. Logged in at {current_time}", "success")
+
+            return redirect(url_for("home"))
+        else:
+            flash(reply.get("message", "Login failed"), "error")
+            return redirect(url_for("login"))
+        
+    return render_template("login.html")
+
+@app.route("/register", methods=["GET", "POST"]) 
+def register():
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "").strip()
+        confirm = request.form.get("confirm", "").strip()
+
+        if not username or not password or not confirm:
+            return render_template("register.html", error = "All fields must be filled.")
+        
+        if password != confirm:
+            return render_template("register.html", error = "Passwords do not match.")
+        
+        request_data = {
+            "action": "register",
+            "username": username,
+            "password": password
+        }
+
+        auth_socket.send_string(json.dumps(request_data))
+        reply_json = auth_socket.recv_string()
+        reply = json.loads(reply_json)
+
+        if reply.get("status") == "ok":
+            return redirect(url_for("login"))
+        else:
+            return render_template("register.html", error = "Registration failed.")
+        
+    return render_template("register.html")
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    flash("You have been logged out.", "success")
+    return redirect(url_for("login"))
+
+
+def get_current_date():
+    request_data = {"format": "YYYY-MM-DD"}
+    calender_socket.send_json(request_data)
+    date = calender_socket.recv_string()
+    return date
+
+def get_current_time():
+    request_data = {"action": "get_time", "format": "12"}
+    clock_socket.send_string(json.dumps(request_data))
+    reply_json = clock_socket.recv_string()
+    reply = json.loads(reply_json)
+    
+    return reply.get("time")
+
+def item_counter():
+    request_data = {"action": "counter", "counter_name": "total_items"}
+    counter_socket.send_string(json.dumps(request_data))
+    reply = json.loads(counter_socket.recv_string())
+    
+    if reply.get("status") == "ok":
+        return reply.get("count")
+    
+def get_item_count():
+    request_data = {"action": "get", "counter_name": "total_items"}
+    counter_socket.send_string(json.dumps(request_data))
+    reply = json.loads(counter_socket.recv_string())
+
+    if reply.get("status") == "ok":
+        return reply.get("count")
+    
+def reset_count():
+    request_data = {"action": "reset", "counter_name": "total_items"}
+    counter_socket.send_string(json.dumps(request_data))
+    reply = json.loads(counter_socket.recv_string())
+
+    return reply.get("status") == "ok"
+
+## pages
+# help page
 @app.route("/help") 
 def help_page():
     return render_template("help.html")
@@ -29,14 +157,20 @@ def help_page():
 # home page
 @app.route("/")
 def home():
+    if "username" not in session:
+        return redirect(url_for("login"))
+
     items = load_items()
     query = request.args.get("q", "").lower()
     if query:
         # add movie i to list if title contains string
         items = [i for i in items if query in i["title"].lower()] 
-    return render_template("home.html", items=items)
 
-# add page
+    total_count = get_item_count()
+    
+    return render_template("home.html", items=items, total_count=total_count)
+
+## add page
 
 # add via omdb
 @app.route("/add_omdb", methods=["GET", "POST"]) 
@@ -60,6 +194,7 @@ def add_omdb():
         else:
             runtime = 0
 
+        
         # add to collection
         if request.form.get("action") == "add":
             items = load_items()
@@ -71,15 +206,19 @@ def add_omdb():
                 "poster": movie.get("Poster"),
                 "status": "Want to Watch",
                 "runtime": runtime, 
-                "progress": 0
+                "progress": 0,
+                "date_added": get_current_date()
             }
             items.append(new_item)
             save_items(items)
+
+            item_counter()
+
             return redirect(url_for("home"))
+        
+        return render_template("add_omdb.html",movie=movie)
 
-        return render_template("add_omdb.html", movie=movie)
-
-    return render_template("add_omdb.html")
+    return render_template("add_omdb.html",movie=None)
 
 
 # add manually
@@ -109,10 +248,13 @@ def add_manual():
             "poster": poster,
             "status": "Want to Watch",
             "runtime": runtime_value,
-            "progress": 0
+            "progress": 0,
+            "date_added": get_current_date()
         }
         items.append(new_item)
         save_items(items)
+        
+        item_counter()
 
         return redirect(url_for("home"))
     
@@ -146,6 +288,11 @@ def remove_movie(item_id):
     for item in items:
         if item["id"] != item_id:
             new_items.append(item)
+
+    if len(new_items) < len(items):
+        reset_count()
+        for _ in new_items:
+            item_counter()
 
     save_items(new_items)
     return redirect(url_for("home"))

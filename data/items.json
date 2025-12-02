@@ -7,16 +7,29 @@
     "poster": "https://m.media-amazon.com/images/M/MV5BMmU5NGJlMzAtMGNmOC00YjJjLTgyMzUtNjAyYmE4Njg5YWMyXkEyXkFqcGc@._V1_SX300.jpg",
     "status": "Want to Watch",
     "runtime": 176,
-    "progress": 0
+    "progress": 52,
+    "date_added": "2025-12-02"
   },
   {
     "id": 2,
-    "title": "ujh",
-    "type": "",
-    "year": "",
-    "poster": null,
+    "title": "Ponyo",
+    "type": "movie",
+    "year": "2008",
+    "poster": "https://m.media-amazon.com/images/M/MV5BZDkzMzQ5ZmQtOTA3MC00MjhiLTk5M2UtNzk0MjEzZmVjN2UxXkEyXkFqcGc@._V1_SX300.jpg",
     "status": "Want to Watch",
-    "runtime": 0,
-    "progress": 0
+    "runtime": 101,
+    "progress": 0,
+    "date_added": "2025-12-02"
+  },
+  {
+    "id": 3,
+    "title": "Spirited Away",
+    "type": "movie",
+    "year": "2001",
+    "poster": "https://m.media-amazon.com/images/M/MV5BNTEyNmEwOWUtYzkyOC00ZTQ4LTllZmUtMjk0Y2YwOGUzYjRiXkEyXkFqcGc@._V1_SX300.jpg",
+    "status": "Want to Watch",
+    "runtime": 124,
+    "progress": 0,
+    "date_added": "2025-12-02"
   }
 ]

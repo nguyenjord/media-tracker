@@ -1,0 +1,26 @@
+.info {
+    display: grid;
+    place-items:center;
+    height:50vh;
+    margin: 0 25%;
+    margin-top: 30px;
+}
+
+.info li {
+    font-size: larger;
+    margin-bottom: 20px;
+    
+}
+
+.home-button {
+    text-decoration: none;
+    text-align: center;
+    margin-top: 50px;
+    background-color: #3a5275;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    width:50%;
+    font-size: 125%;
+}

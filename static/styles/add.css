@@ -1,0 +1,90 @@
+.add {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 40px;
+}
+
+.add img {
+    width: 250px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.info {
+    background: white;
+    padding: 20px;
+    width: 400px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.info button {  
+    margin-top: 50px;
+    background-color: #3a5275;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    width:100%;
+    font-size: 125%;
+}
+
+.info p {
+    margin: 10px 0;
+}
+
+/* add omdb page */
+.search {
+    display: grid;
+    place-items:center;
+}
+
+.search form {
+    display: grid;
+    width:100%;
+    max-width: 400px;
+}
+
+.search input[type="text"] {
+    padding: 10px 20px;
+    font-size: 125%;
+    
+}
+
+.search button {  
+    margin-top: 20px;
+    background-color: #3a5275;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    width:100%;
+    font-size: 125%;
+}
+
+.remove-form {
+    margin:2px; 
+}
+
+/* manual add page */
+
+.add_manual {
+    display: grid;
+    place-items:center;
+}
+
+.add_manual button {  
+    margin-top: 20px;
+    background-color: #3a5275;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    width:100%;
+    font-size: 125%;
+}
+
+.add_manual input[type="text"],input[type="number"] {
+    padding: 10px 20px;
+    font-size: 125%;
+    margin: 20px 0;
+}

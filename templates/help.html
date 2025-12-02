@@ -4,28 +4,39 @@
       <!-- Jordan Nguyen 10/28/2025 CS-361 -->
       <title>Help</title>
       <link href="{{ url_for('static', filename='styles/style.css') }}" rel="stylesheet">
+      <link href="{{ url_for('static', filename='styles/help.css') }}" rel="stylesheet">
+
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
    </head>
    <body>
       <header>
          <ul>
             <li><a href="{{ url_for('home') }}">Home</a></li>
             <li><a href="{{ url_for('add_omdb') }}">Add OMDb</a></li>
-            <li><a href="{{ url_for('add_manual') }}">Add Manual</a></li>
+            <li><a href="{{ url_for('add_manual') }}">Manual Add</a></li>
             <li><a href="{{ url_for('help_page') }}"class="active">Help</a></li>
+
+            {% if session.get('username') %}
+               <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            {% endif %}
          </ul>
       </header>
 
       <h1>Help</h1>
 
-      <p>This app lets users track their various forms of media in one collection.</p>
-      <ul>
-         <li>To find the specific media, select Search on the navigation bar.</li>
-         <li>If your specific media isn’t available when search, you can add it manually. The option to add manually is present in the search page.</li>
-         <li>To remove a media, select the media in either the home page or via search. Click on the check mark on the top left of the media’s cover to remove.</li>
-      </ul>
+      <div class="info">
+         <h2>This app lets users track their movies or shows in one collection.</h2>
+         <ul>
+            <li>To find the specific media, select Add OMDb on the navigation bar.</li>
+            <li>If your specific media isn’t available when search, select Manual Add on the navigation bar to add it manually.</li>
+            <li>To remove a media, hover over the media in the home page. Click on the check mark on the top left of the media’s cover to remove.</li>
+         </ul>
+         
+         <a class="home-button" href="/">Back to Home</a>
+      </div>
 
-      <p>Contact us at [...]</p>
-      
-      <a href="/">Back to Home</a>
+
    </body>
 </html>
